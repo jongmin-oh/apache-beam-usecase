@@ -18,6 +18,6 @@ with beam.Pipeline() as pipeline:
         | "Filter" >> beam.Filter(lambda line: len(line) > 6)
         | "ContextMerge" >> beam.Map(lambda line: line[:7] + [" ".join(line[7:])])
         | "Anonyzmize" >> beam.ParDo(Anonymize())
-        | "Join" >> beam.Map(" ".join) 
+        | "Join" >> beam.Map(" ".join)
         | "Print" >> beam.Map(print)
     )
