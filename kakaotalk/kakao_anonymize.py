@@ -1,5 +1,5 @@
 import apache_beam as beam
-from de_identify import DeIdentifier
+from deidentify import DeIdentifier
 from transform_datetime import datetime_to_int
 
 
@@ -26,7 +26,7 @@ with beam.Pipeline() as pipeline:
         lines
         | "Split" >> beam.Map(lambda line: line.split())
         | "Filter" >> beam.Filter(lambda line: len(line) > 6)
-        | "Join" >> beam.Map(" ".join) 
+        | "Join" >> beam.Map(" ".join)
         | "SplitDate" >> beam.Map(lambda line: line.split(","))
         | "TransformDatetime" >> beam.ParDo(TransformDatetime())
         | "Anonyzmize" >> beam.ParDo(Anonymize())
