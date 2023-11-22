@@ -4,7 +4,7 @@ Base Function and Usecase
  - Python 3.11
 
 ```
-pip install apache-beam==2.51.0
+pip install apache-beam[gcp]==2.51.0
 ```
 
 ### 1. Create
@@ -25,7 +25,7 @@ pip install apache-beam==2.51.0
 
 ### 4. WriteToText
 ```python
-'Write to text'>> beam.io.WriteToText('regular_filter.txt'))
+'WriteToText'>> beam.io.WriteToText('regular_filter.txt'))
 ```
 
 ### 5. Filter
@@ -33,8 +33,10 @@ pip install apache-beam==2.51.0
 def is_midfielder(text):
     return text[2] == "MF"
 
-"Filter Postion" >> beam.Filter(is_midfielder)
+"FilterPostion" >> beam.Filter(is_midfielder)
 ```
 
 ### Reference
 - https://esevan.tistory.com/19
+- https://beam.apache.org/releases/pydoc/2.52.0/index.html
+- https://github.com/apache/beam/tree/master/sdks/python/apache_beam/examples
