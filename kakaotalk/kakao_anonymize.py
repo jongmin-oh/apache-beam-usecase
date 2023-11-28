@@ -1,6 +1,5 @@
 import apache_beam as beam
 
-import base64
 from deidentify import DeIdentifier
 from transform_datetime import datetime_to_int
 
@@ -22,18 +21,13 @@ class TransformDatetime(beam.DoFn):
         yield element
 
 
-class GetId(beam.DoFn):
-    def process(self, element):
-        yield element[0]
-
-
 with beam.Pipeline() as pipeline:
     lines = pipeline | "ReadFromText" >> beam.io.ReadFromText("example/kakaotalk.txt")
     filter_line = (
         lines
         | "Split1" >> beam.Map(lambda line: line.split())
         | "Filter" >> beam.Filter(lambda line: len(line) > 6)
-        | "Join" >> beam.Map(" ".join)
+        | "JoinText1" >> beam.Map(" ".join)
     )
     transform = (
         filter_line
@@ -41,11 +35,9 @@ with beam.Pipeline() as pipeline:
         | "Transform" >> beam.ParDo(TransformDatetime())
     )
     
-    get_id = (
+    anonymize = (
         transform
-        | "Print" >> beam.Map(print)
+        | "Anonymize" >> beam.ParDo(Anonymize())
+        | "JoinText2" >> beam.Map(" : ".join)
     )
-        # | "SplitDate" >> beam.Map(lambda line: line.split(","))
-        # | "TransformDatetime" >> beam.ParDo(TransformDatetime())
-        # | "Anonyzmize" >> beam.ParDo(Anonymize())
-        # | "Print" >> beam.Map(print)
+    anonymize | "WriteToText" >> beam.io.WriteToText("example/kakaotalk_anonymize.txt")
